@@ -4,3 +4,5 @@ npm run build
 npm run lint
 # Preview del build de producción
 npm run preview
+#comando directo para ejecutar
+npm run dev
