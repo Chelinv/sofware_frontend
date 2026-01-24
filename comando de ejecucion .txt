@@ -1,0 +1,6 @@
+# Build para producción
+npm run build
+# Verificar linting
+npm run lint
+# Preview del build de producción
+npm run preview
