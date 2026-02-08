@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "../../config/api";
+import api from "../../api/api";
 import UserForm from "./UserForm";
 import Swal from "sweetalert2";
 
@@ -16,7 +16,7 @@ const UserList = () => {
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const response = await api.get("/users");
+            const response = await api.get("/usuarios/");
             setUsers(response.data);
         } catch (error) {
             console.error("Error fetching users:", error);
@@ -54,7 +54,7 @@ const UserList = () => {
 
         if (result.isConfirmed) {
             try {
-                await api.delete(`/users/${user.id}`);
+                await api.delete(`/usuarios/${user.id}`);
                 Swal.fire({
                     icon: "success",
                     title: "Eliminado",

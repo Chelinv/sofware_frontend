@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "../../config/api";
+import api from "../../api/api";
 
 interface User {
   id: number;
@@ -30,10 +30,10 @@ export default function UserForm({ user, onClose, refresh }: UserFormProps) {
 
     try {
       if (user) {
-        await api.put(`/users/${user.id}`, { email, role });
+        await api.put(`/usuarios/${user.id}`, { email, role });
         alert("Usuario actualizado");
       } else {
-        await api.post("/users", { email, password, role });
+        await api.post("/usuarios/", { email, password, role });
         alert("Usuario creado");
       }
 

@@ -25,6 +25,7 @@ const Login = () => {
             localStorage.setItem("token", "fake-jwt-token");
             localStorage.setItem("currentUser", JSON.stringify(response.data));
 
+
             Swal.fire({
                 icon: 'success',
                 title: '¡Bienvenido!',
@@ -33,7 +34,26 @@ const Login = () => {
                 showConfirmButton: false
             });
 
-            navigate("/");
+            // Redirigir según el rol del usuario
+            const rol = response.data.rol.toLowerCase();
+
+            switch (rol) {
+                case 'administrador':
+                    navigate("/usuarios");
+                    break;
+                case 'docente':
+                    navigate("/calificaciones");
+                    break;
+                case 'estudiante':
+                    navigate("/asignaturas");
+                    break;
+                case 'padre':
+                    navigate("/pagos");
+                    break;
+                default:
+                    navigate("/");
+            }
+
         } catch (err) {
             console.error(err);
             setError(err.response?.data?.detail || "Correo o contraseña incorrectos");
