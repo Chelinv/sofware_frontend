@@ -1,19 +1,67 @@
-import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar';
-import Footer from './Footer';
+import { Outlet, useNavigate } from "react-router-dom";
 
 const Layout = () => {
-    return (
-        <div className="d-flex flex-column min-vh-100">
-            <Navbar />
+  const navigate = useNavigate();
 
-            <main className="flex-grow-1 py-4">
-                <Outlet />
-            </main>
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // o sessionStorage si usas ese
+    navigate("/login");
+  };
 
-            <Footer />
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  return (
+    <div>
+      {/* HEADER SUPERIOR */}
+      <header
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "10px 20px",
+        }}
+      >
+        <div></div>
+
+        {/* BOTONES */}
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            onClick={handleBack}
+            style={{
+              padding: "6px 14px",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
+              background: "white",
+              cursor: "pointer",
+            }}
+          >
+            ⬅ Regresar
+          </button>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: "6px 14px",
+              borderRadius: "6px",
+              border: "none",
+              background: "#dc2626",
+              color: "white",
+              cursor: "pointer",
+            }}
+          >
+            Cerrar sesión
+          </button>
         </div>
-    );
+      </header>
+
+      {/* CONTENIDO */}
+      <main>
+        <Outlet />
+      </main>
+    </div>
+  );
 };
 
 export default Layout;
