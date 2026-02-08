@@ -1,30 +1,49 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import api from "../api/api";
+import Swal from "sweetalert2";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+        setLoading(true);
 
-        // 🔹 Obtener usuarios guardados
-        const users = JSON.parse(localStorage.getItem("users")) || [];
+        try {
+            const response = await api.post("/auth/login", {
+                email,
+                password
+            });
 
-        // 🔹 Buscar usuario
-        const userFound = users.find(
-            (u) => u.email === email && u.password === password
-        );
-
-        if (userFound) {
-            // 🔐 Token simulado
+            // Guardar token y datos del usuario
             localStorage.setItem("token", "fake-jwt-token");
-            localStorage.setItem("currentUser", JSON.stringify(userFound));
+            localStorage.setItem("currentUser", JSON.stringify(response.data));
+
+            Swal.fire({
+                icon: 'success',
+                title: '¡Bienvenido!',
+                text: `Hola ${response.data.nombre}`,
+                timer: 1500,
+                showConfirmButton: false
+            });
+
             navigate("/");
-        } else {
-            setError("Correo o contraseña incorrectos");
+        } catch (err) {
+            console.error(err);
+            setError(err.response?.data?.detail || "Correo o contraseña incorrectos");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de autenticación',
+                text: err.response?.data?.detail || "Correo o contraseña incorrectos",
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -79,11 +98,18 @@ const Login = () => {
                                 </div>
                             </div>
 
-                            <button type="submit" className="btn btn-primary w-100 py-2 fw-semibold">
+                            <button type="submit" className="btn btn-primary w-100 py-2 fw-semibold" disabled={loading}>
                                 <i className="bi bi-box-arrow-in-right me-2"></i>
-                                Iniciar sesión
+                                {loading ? "Iniciando sesión..." : "Iniciar sesión"}
                             </button>
                         </form>
+
+                        <div className="text-center mt-3">
+                            <Link to="/register" className="text-primary text-decoration-none">
+                                <i className="bi bi-person-plus me-1"></i>
+                                ¿No tienes cuenta? Crear cuenta
+                            </Link>
+                        </div>
 
                         <div className="text-center mt-4 text-muted" style={{ fontSize: "0.9rem" }}>
                             © {new Date().getFullYear()} SGIE · Acceso seguro
