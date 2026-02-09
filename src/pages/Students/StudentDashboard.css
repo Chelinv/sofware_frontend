@@ -1,0 +1,85 @@
+/* Student Dashboard Styles */
+
+.student-dashboard {
+    animation: fadeIn 0.5s ease-in;
+}
+
+.welcome-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-header h2 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.summary-card {
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.summary-card i {
+    opacity: 0.9;
+}
+
+.subject-card {
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    border-left: 4px solid #667eea;
+}
+
+.subject-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.grade-display {
+    text-align: center;
+    padding: 1rem 0;
+    border-top: 1px solid #e9ecef;
+}
+
+.grade-badge {
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .summary-card {
+        margin-bottom: 1rem;
+    }
+
+    .grade-badge {
+        font-size: 1.5rem;
+        padding: 0.4rem 1rem;
+    }
+}

@@ -46,8 +46,8 @@ const Login = () => {
                     navigate("/calificaciones");
                     break;
                 case 'estudiante':
-                    // Estudiante ve solo sus inscripciones
-                    navigate("/inscripciones");
+                    // Estudiante ve su dashboard con materias y calificaciones
+                    navigate("/estudiante/dashboard");
                     break;
                 case 'padre':
                     navigate("/pagos");

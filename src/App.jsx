@@ -31,6 +31,7 @@ function App() {
         <Route path="calificaciones/registrar" element={<ProtectedRoute><GradeBook /></ProtectedRoute>} />
         <Route path="calificaciones/visualizar" element={<ProtectedRoute><GradeList /></ProtectedRoute>} />
         <Route path="pagos" element={<ProtectedRoute><PaymentList /></ProtectedRoute>} />
+        <Route path="estudiante/dashboard" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
         <Route path="estudiante/mis-materias" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
       </Route>
     </Routes>
