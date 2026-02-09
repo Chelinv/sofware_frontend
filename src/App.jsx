@@ -13,6 +13,7 @@ import GradeBook from './pages/Grades/GradeBook';
 import NotasHome from './pages/NotasHome';
 import PaymentList from './pages/Payments/PaymentList';
 import StudentDashboard from './pages/Students/StudentDashboard';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 import './App.css';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         {/* Protected Routes - Require Authentication */}
+        <Route path="admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="usuarios" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
         <Route path="asignaturas" element={<ProtectedRoute><SubjectList /></ProtectedRoute>} />
         <Route path="inscripciones" element={<ProtectedRoute><EnrollmentList /></ProtectedRoute>} />

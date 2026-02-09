@@ -39,8 +39,8 @@ const Login = () => {
 
             switch (rol) {
                 case 'administrador':
-                    // Admin tiene acceso a todo, va al home/dashboard
-                    navigate("/");
+                    // Admin va a su dashboard con estadísticas
+                    navigate("/admin/dashboard");
                     break;
                 case 'docente':
                     navigate("/calificaciones");
