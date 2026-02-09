@@ -44,7 +44,7 @@ const EnrollmentList = () => {
                         <strong>Administradores:</strong> Pueden crear nuevas inscripciones asignando materias a estudiantes
                     </li>
                     <li>
-                        <strong>Estudiantes:</strong> Pueden ver sus inscripciones en el módulo de calificaciones
+                        <strong>Estudiantes:</strong> Pueden inscribirse en materias y ver sus inscripciones
                     </li>
                     <li>
                         <strong>Docentes:</strong> Pueden ver las inscripciones al registrar calificaciones

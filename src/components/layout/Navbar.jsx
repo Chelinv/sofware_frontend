@@ -3,8 +3,9 @@ import Swal from 'sweetalert2';
 
 const Navbar = () => {
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
-    const isAuthenticated = !!localStorage.getItem('token');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    const isAuthenticated = !!currentUser;
+    const userRole = currentUser?.rol?.toLowerCase() || '';
 
     const handleLogout = () => {
         Swal.fire({
@@ -19,6 +20,7 @@ const Navbar = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 localStorage.removeItem('token');
+                localStorage.removeItem('currentUser');
                 localStorage.removeItem('user');
                 navigate('/login');
                 Swal.fire({
@@ -63,40 +65,95 @@ const Navbar = () => {
 
                         {isAuthenticated && (
                             <>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/usuarios">
-                                        <i className="bi bi-people me-1"></i>
-                                        Usuarios
-                                    </Link>
-                                </li>
+                                {/* Admin Menu */}
+                                {userRole === "administrador" && (
+                                    <>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/admin/dashboard">
+                                                <i className="bi bi-speedometer2 me-1"></i>
+                                                Dashboard
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/usuarios">
+                                                <i className="bi bi-people me-1"></i>
+                                                Usuarios
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/asignaturas">
+                                                <i className="bi bi-journal-bookmark me-1"></i>
+                                                Asignaturas
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/inscripciones">
+                                                <i className="bi bi-pencil-square me-1"></i>
+                                                Inscripciones
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/calificaciones">
+                                                <i className="bi bi-clipboard-check me-1"></i>
+                                                Calificaciones
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/pagos">
+                                                <i className="bi bi-credit-card me-1"></i>
+                                                Pagos
+                                            </Link>
+                                        </li>
+                                    </>
+                                )}
 
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/asignaturas">
-                                        <i className="bi bi-journal-bookmark me-1"></i>
-                                        Asignaturas
-                                    </Link>
-                                </li>
+                                {/* Student Menu */}
+                                {userRole === "estudiante" && (
+                                    <>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/estudiante/dashboard">
+                                                <i className="bi bi-person-circle me-1"></i>
+                                                Mi Dashboard
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/inscripciones/crear">
+                                                <i className="bi bi-pencil-square me-1"></i>
+                                                Inscribirme en Materias
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/calificaciones/visualizar">
+                                                <i className="bi bi-clipboard-check me-1"></i>
+                                                Mis Calificaciones
+                                            </Link>
+                                        </li>
+                                    </>
+                                )}
 
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/inscripciones">
-                                        <i className="bi bi-pencil-square me-1"></i>
-                                        Inscripciones
-                                    </Link>
-                                </li>
-
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/calificaciones">
-                                        <i className="bi bi-clipboard-check me-1"></i>
-                                        Calificaciones
-                                    </Link>
-                                </li>
-
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/pagos">
-                                        <i className="bi bi-credit-card me-1"></i>
-                                        Pagos
-                                    </Link>
-                                </li>
+                                {/* Teacher Menu */}
+                                {userRole === "docente" && (
+                                    <>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/calificaciones">
+                                                <i className="bi bi-clipboard-check me-1"></i>
+                                                Calificaciones
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/calificaciones/registrar">
+                                                <i className="bi bi-pencil me-1"></i>
+                                                Registrar Notas
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/asignaturas">
+                                                <i className="bi bi-journal-bookmark me-1"></i>
+                                                Asignaturas
+                                            </Link>
+                                        </li>
+                                    </>
+                                )}
                             </>
                         )}
                     </ul>
@@ -107,7 +164,10 @@ const Navbar = () => {
                                 <li className="nav-item">
                                     <span className="nav-link">
                                         <i className="bi bi-person-circle me-1"></i>
-                                        {user?.nombre || 'Usuario'}
+                                        {currentUser?.nombre || 'Usuario'}
+                                        <span className="badge bg-light text-primary ms-2">
+                                            {currentUser?.rol || ''}
+                                        </span>
                                     </span>
                                 </li>
                                 <li className="nav-item">

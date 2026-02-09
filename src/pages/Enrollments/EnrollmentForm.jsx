@@ -7,8 +7,8 @@ const EnrollmentForm = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
   const userRole = currentUser.rol?.toLowerCase() || "";
 
-  // Check if user can create enrollments (admin or padre)
-  const canCreateEnrollment = userRole === "administrador" || userRole === "padre";
+  // Check if user can create enrollments (admin or student)
+  const canCreateEnrollment = userRole === "administrador" || userRole === "estudiante";
 
   const [students, setStudents] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -28,7 +28,7 @@ const EnrollmentForm = () => {
             Acceso Denegado
           </h4>
           <p className="mb-0">
-            Solo <strong>Administradores</strong> pueden crear inscripciones.
+            Solo <strong>Administradores y Estudiantes</strong> pueden crear inscripciones.
           </p>
         </div>
       </div>
@@ -54,6 +54,13 @@ const EnrollmentForm = () => {
 
     fetchStudents();
   }, []);
+
+  // Auto-select student if current user is a student
+  useEffect(() => {
+    if (userRole === "estudiante" && currentUser.id) {
+      setSelectedStudent(currentUser.id);
+    }
+  }, [userRole, currentUser.id]);
 
   // Cargar asignaturas
   useEffect(() => {
