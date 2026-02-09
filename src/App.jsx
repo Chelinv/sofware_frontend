@@ -11,6 +11,7 @@ import GradeList from './pages/Grades/GradeList';
 import GradeBook from './pages/Grades/GradeBook';
 import NotasHome from './pages/NotasHome';
 import PaymentList from './pages/Payments/PaymentList';
+import StudentDashboard from './pages/Students/StudentDashboard';
 import './App.css';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="calificaciones/registrar" element={<GradeBook />} />
         <Route path="calificaciones/visualizar" element={<GradeList />} />
         <Route path="pagos" element={<PaymentList />} />
+        <Route path="estudiante/mis-materias" element={<StudentDashboard />} />
       </Route>
     </Routes>
   );
