@@ -35,7 +35,12 @@ export default function UserForm({ user, onClose, refresh }: UserFormProps) {
     try {
       if (user) {
         // Actualizar usuario
-        await api.put(`/usuarios/${user.id}`, { email, rol, nombre });
+        const updateData: any = { email, rol, nombre };
+        // Solo incluir password si se proporcionó uno nuevo
+        if (password && password.trim() !== "") {
+          updateData.password = password;
+        }
+        await api.put(`/usuarios/${user.id}`, updateData);
         Swal.fire({
           icon: "success",
           title: "¡Actualizado!",
@@ -117,23 +122,23 @@ export default function UserForm({ user, onClose, refresh }: UserFormProps) {
                 />
               </div>
 
-              {!user && (
-                <div className="mb-3">
-                  <label className="form-label">
-                    <i className="bi bi-lock me-2"></i>
-                    Contraseña
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Mínimo 6 caracteres"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={6}
-                  />
-                </div>
-              )}
+
+              <div className="mb-3">
+                <label className="form-label">
+                  <i className="bi bi-lock me-2"></i>
+                  Contraseña {user && <small className="text-muted">(dejar vacío para no cambiar)</small>}
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  placeholder={user ? "Nueva contraseña (opcional)" : "Mínimo 6 caracteres"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required={!user}
+                  minLength={6}
+                />
+              </div>
+
 
               <div className="mb-3">
                 <label className="form-label">
