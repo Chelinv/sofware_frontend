@@ -39,13 +39,15 @@ const Login = () => {
 
             switch (rol) {
                 case 'administrador':
-                    navigate("/usuarios");
+                    // Admin tiene acceso a todo, va al home/dashboard
+                    navigate("/");
                     break;
                 case 'docente':
                     navigate("/calificaciones");
                     break;
                 case 'estudiante':
-                    navigate("/asignaturas");
+                    // Estudiante ve solo sus inscripciones
+                    navigate("/inscripciones");
                     break;
                 case 'padre':
                     navigate("/pagos");
