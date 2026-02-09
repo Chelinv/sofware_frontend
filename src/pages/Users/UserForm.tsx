@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import api from "../../api/api";
+import Swal from "sweetalert2";
 
 interface User {
-  id: number;
+  id: string;
   email: string;
-  role: string;
+  rol: string;
+  nombre?: string;
 }
 
 interface UserFormProps {
@@ -16,12 +18,14 @@ interface UserFormProps {
 export default function UserForm({ user, onClose, refresh }: UserFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
+  const [nombre, setNombre] = useState("");
+  const [rol, setRol] = useState("Estudiante");
 
   useEffect(() => {
     if (user) {
       setEmail(user.email);
-      setRole(user.role);
+      setRol(user.rol);
+      setNombre(user.nombre || "");
     }
   }, [user]);
 
@@ -30,81 +34,152 @@ export default function UserForm({ user, onClose, refresh }: UserFormProps) {
 
     try {
       if (user) {
-        await api.put(`/usuarios/${user.id}`, { email, role });
-        alert("Usuario actualizado");
+        // Actualizar usuario
+        await api.put(`/usuarios/${user.id}`, { email, rol, nombre });
+        Swal.fire({
+          icon: "success",
+          title: "¡Actualizado!",
+          text: "Usuario actualizado correctamente",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       } else {
-        await api.post("/usuarios/", { email, password, role });
-        alert("Usuario creado");
+        // Crear usuario
+        await api.post("/usuarios/", { email, password, rol, nombre });
+        Swal.fire({
+          icon: "success",
+          title: "¡Creado!",
+          text: "Usuario creado correctamente",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       }
 
       refresh();
       onClose();
-    } catch (error) {
-      alert("Error guardando usuario");
+    } catch (error: any) {
+      console.error("Error guardando usuario:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response?.data?.detail || "Error al guardar el usuario",
+      });
     }
   };
 
   return (
-    <div style={styles.overlay}>
-      <form style={styles.modal} onSubmit={handleSubmit}>
-        <h3>{user ? "Editar Usuario" : "Nuevo Usuario"}</h3>
+    <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          {/* Header */}
+          <div className="modal-header bg-primary text-white">
+            <h5 className="modal-title">
+              <i className={`bi ${user ? 'bi-pencil-square' : 'bi-person-plus-fill'} me-2`}></i>
+              {user ? "Editar Usuario" : "Nuevo Usuario"}
+            </h5>
+            <button
+              type="button"
+              className="btn-close btn-close-white"
+              onClick={onClose}
+            ></button>
+          </div>
 
-        <input
-          placeholder="Correo"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          {/* Body */}
+          <form onSubmit={handleSubmit}>
+            <div className="modal-body">
+              <div className="mb-3">
+                <label className="form-label">
+                  <i className="bi bi-person me-2"></i>
+                  Nombre Completo
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Ej: Juan Pérez"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                />
+              </div>
 
-        {!user && (
-          <input
-            placeholder="Contraseña"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        )}
+              <div className="mb-3">
+                <label className="form-label">
+                  <i className="bi bi-envelope me-2"></i>
+                  Correo Electrónico
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="usuario@ejemplo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
 
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="admin">Admin</option>
-          <option value="user">Usuario</option>
-        </select>
+              {!user && (
+                <div className="mb-3">
+                  <label className="form-label">
+                    <i className="bi bi-lock me-2"></i>
+                    Contraseña
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Mínimo 6 caracteres"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                  />
+                </div>
+              )}
 
-        <div style={styles.actions}>
-          <button type="button" onClick={onClose}>
-            Cancelar
-          </button>
-          <button type="submit">
-            Guardar
-          </button>
+              <div className="mb-3">
+                <label className="form-label">
+                  <i className="bi bi-shield-check me-2"></i>
+                  Rol
+                </label>
+                <select
+                  className="form-select"
+                  value={rol}
+                  onChange={(e) => setRol(e.target.value)}
+                >
+                  <option value="Administrador">Administrador</option>
+                  <option value="Docente">Docente</option>
+                  <option value="Estudiante">Estudiante</option>
+                  <option value="Padre">Padre</option>
+                </select>
+              </div>
+
+              <div className="alert alert-info mb-0">
+                <i className="bi bi-info-circle me-2"></i>
+                <small>
+                  {user
+                    ? "Los cambios se aplicarán inmediatamente."
+                    : "El usuario recibirá sus credenciales por correo."}
+                </small>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={onClose}
+              >
+                <i className="bi bi-x-circle me-2"></i>
+                Cancelar
+              </button>
+              <button type="submit" className="btn btn-primary">
+                <i className={`bi ${user ? 'bi-check-circle' : 'bi-save'} me-2`}></i>
+                {user ? "Actualizar" : "Guardar"}
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
-
-const styles = {
-  overlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,.4)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  modal: {
-    background: "#fff",
-    padding: "25px",
-    borderRadius: "12px",
-    width: "350px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px"
-  },
-  actions: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "10px"
-  }
-} as const;

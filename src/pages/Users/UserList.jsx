@@ -120,12 +120,12 @@ const UserList = () => {
                                         <span
                                             style={{
                                                 ...styles.badge,
-                                                ...(user.role === "admin"
+                                                ...(user.rol === "Administrador"
                                                     ? styles.badgeAdmin
                                                     : styles.badgeUser),
                                             }}
                                         >
-                                            {user.role}
+                                            {user.rol || "Sin rol"}
                                         </span>
                                     </td>
                                     <td style={styles.td}>

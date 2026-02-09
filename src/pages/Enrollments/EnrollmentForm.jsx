@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
-import api from "../../api/api";
+import api from "../../config/api";
 import Swal from "sweetalert2";
 
 const EnrollmentForm = () => {
+  // Get current user to check role
+  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+  const userRole = currentUser.rol?.toLowerCase() || "";
+
+  // Check if user can create enrollments (admin or padre)
+  const canCreateEnrollment = userRole === "administrador" || userRole === "padre";
+
   const [students, setStudents] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState("");
@@ -10,6 +17,23 @@ const EnrollmentForm = () => {
   const [loadingStudents, setLoadingStudents] = useState(true);
   const [loadingSubjects, setLoadingSubjects] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
+  // If user doesn't have permission, show access denied
+  if (!canCreateEnrollment) {
+    return (
+      <div className="container mt-4">
+        <div className="alert alert-danger">
+          <h4 className="alert-heading">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            Acceso Denegado
+          </h4>
+          <p className="mb-0">
+            Solo <strong>Administradores</strong> y <strong>Padres</strong> pueden crear inscripciones.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Cargar estudiantes
   useEffect(() => {
