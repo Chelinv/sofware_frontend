@@ -39,8 +39,21 @@ const GradeList = () => {
 
     // Función para obtener nombre de materia por ID
     const getSubjectName = (subjectId) => {
-        const subject = subjects.find((s) => (s._id || s.id) === subjectId);
-        return subject?.nombre || subject?.name || subjectId;
+        if (!subjectId) return "Sin asignatura";
+
+        // Buscar por _id o id
+        const subject = subjects.find((s) => {
+            const sId = s._id || s.id;
+            return sId === subjectId;
+        });
+
+        if (subject) {
+            return subject.nombre || subject.name || "Sin nombre";
+        }
+
+        // Si no se encuentra, mostrar mensaje más claro
+        console.warn(`Asignatura no encontrada: ${subjectId}`);
+        return "Asignatura no encontrada";
     };
 
     // Función para obtener calificación de un estudiante en una materia
