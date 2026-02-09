@@ -25,6 +25,13 @@ const GradeList = () => {
                 const subjectsRes = await api.get("/asignaturas");
                 setSubjects(subjectsRes.data || []);
 
+                // DEBUG: Ver qué asignaturas se cargaron
+                console.log("📚 Asignaturas cargadas:", subjectsRes.data);
+                console.log("📚 IDs de asignaturas:", subjectsRes.data?.map(s => ({
+                    id: s.id || s._id,
+                    nombre: s.nombre
+                })));
+
                 // Cargar todas las calificaciones
                 const calificacionesRes = await api.get("/calificaciones");
                 setCalificaciones(calificacionesRes.data || []);
@@ -88,6 +95,8 @@ const GradeList = () => {
 
                 filtered.forEach((m) => {
                     // Para cada matrícula, crear una fila por cada asignatura
+                    console.log("🔍 Matrícula asignatura_ids:", m.asignatura_ids);
+
                     m.asignatura_ids.forEach((asignaturaId) => {
                         enriched.push({
                             id: `${m.id}-${asignaturaId}`,
