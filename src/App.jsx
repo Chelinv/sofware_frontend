@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -21,15 +22,16 @@ function App() {
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="usuarios" element={<UserList />} />
-        <Route path="asignaturas" element={<SubjectList />} />
-        <Route path="inscripciones" element={<EnrollmentList />} />
-        <Route path="inscripciones/crear" element={<EnrollmentForm />} />
-        <Route path="calificaciones" element={<NotasHome />} />
-        <Route path="calificaciones/registrar" element={<GradeBook />} />
-        <Route path="calificaciones/visualizar" element={<GradeList />} />
-        <Route path="pagos" element={<PaymentList />} />
-        <Route path="estudiante/mis-materias" element={<StudentDashboard />} />
+        {/* Protected Routes - Require Authentication */}
+        <Route path="usuarios" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
+        <Route path="asignaturas" element={<ProtectedRoute><SubjectList /></ProtectedRoute>} />
+        <Route path="inscripciones" element={<ProtectedRoute><EnrollmentList /></ProtectedRoute>} />
+        <Route path="inscripciones/crear" element={<ProtectedRoute><EnrollmentForm /></ProtectedRoute>} />
+        <Route path="calificaciones" element={<ProtectedRoute><NotasHome /></ProtectedRoute>} />
+        <Route path="calificaciones/registrar" element={<ProtectedRoute><GradeBook /></ProtectedRoute>} />
+        <Route path="calificaciones/visualizar" element={<ProtectedRoute><GradeList /></ProtectedRoute>} />
+        <Route path="pagos" element={<ProtectedRoute><PaymentList /></ProtectedRoute>} />
+        <Route path="estudiante/mis-materias" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
       </Route>
     </Routes>
   );
