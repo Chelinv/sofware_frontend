@@ -153,7 +153,7 @@ export default function UserForm({ user, onClose, refresh }: UserFormProps) {
                   <option value="Administrador">Administrador</option>
                   <option value="Docente">Docente</option>
                   <option value="Estudiante">Estudiante</option>
-                  <option value="Padre">Padre</option>
+
                 </select>
               </div>
 
