@@ -28,7 +28,7 @@ const EnrollmentForm = () => {
             Acceso Denegado
           </h4>
           <p className="mb-0">
-            Solo <strong>Administradores</strong> y <strong>Padres</strong> pueden crear inscripciones.
+            Solo <strong>Administradores</strong> pueden crear inscripciones.
           </p>
         </div>
       </div>

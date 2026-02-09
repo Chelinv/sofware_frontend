@@ -41,7 +41,7 @@ const EnrollmentList = () => {
                 </p>
                 <ul className="mb-0">
                     <li>
-                        <strong>Administradores y Padres:</strong> Pueden crear nuevas inscripciones asignando materias a estudiantes
+                        <strong>Administradores:</strong> Pueden crear nuevas inscripciones asignando materias a estudiantes
                     </li>
                     <li>
                         <strong>Estudiantes:</strong> Pueden ver sus inscripciones en el módulo de calificaciones
