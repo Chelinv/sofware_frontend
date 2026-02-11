@@ -1,11 +1,13 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
     const isAuthenticated = !!currentUser;
     const userRole = currentUser?.rol?.toLowerCase() || '';
+    const isHomePage = location.pathname === '/';
 
     const handleLogout = () => {
         Swal.fire({
@@ -159,7 +161,7 @@ const Navbar = () => {
                     </ul>
 
                     <ul className="navbar-nav">
-                        {isAuthenticated ? (
+                        {isAuthenticated && !isHomePage ? (
                             <>
                                 <li className="nav-item">
                                     <span className="nav-link">
@@ -177,14 +179,14 @@ const Navbar = () => {
                                     </button>
                                 </li>
                             </>
-                        ) : (
+                        ) : !isAuthenticated && !isHomePage ? (
                             <li className="nav-item">
                                 <Link className="btn btn-outline-light btn-sm" to="/login">
                                     <i className="bi bi-box-arrow-in-right me-1"></i>
                                     Iniciar Sesión
                                 </Link>
                             </li>
-                        )}
+                        ) : null}
                     </ul>
                 </div>
             </div>

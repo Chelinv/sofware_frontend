@@ -1,7 +1,9 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 const Layout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // o sessionStorage si usas ese
@@ -25,35 +27,37 @@ const Layout = () => {
       >
         <div></div>
 
-        {/* BOTONES */}
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button
-            onClick={handleBack}
-            style={{
-              padding: "6px 14px",
-              borderRadius: "6px",
-              border: "1px solid #ccc",
-              background: "white",
-              cursor: "pointer",
-            }}
-          >
-            ⬅ Regresar
-          </button>
+        {/* BOTONES - Solo mostrar si NO estamos en la página de inicio */}
+        {!isHomePage && (
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              onClick={handleBack}
+              style={{
+                padding: "6px 14px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                background: "white",
+                cursor: "pointer",
+              }}
+            >
+              ⬅ Regresar
+            </button>
 
-          <button
-            onClick={handleLogout}
-            style={{
-              padding: "6px 14px",
-              borderRadius: "6px",
-              border: "none",
-              background: "#dc2626",
-              color: "white",
-              cursor: "pointer",
-            }}
-          >
-            Cerrar sesión
-          </button>
-        </div>
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: "6px 14px",
+                borderRadius: "6px",
+                border: "none",
+                background: "#dc2626",
+                color: "white",
+                cursor: "pointer",
+              }}
+            >
+              Cerrar sesión
+            </button>
+          </div>
+        )}
       </header>
 
       {/* CONTENIDO */}

@@ -6,10 +6,12 @@ import api from "../../config/api";
 const PaymentList = () => {
     const [transactions, setTransactions] = useState([]);
     const [vouchers, setVouchers] = useState([]);
+    const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingStudents, setLoadingStudents] = useState(true);
 
     // Reportes
-    const [studentId, setStudentId] = useState("");
+    const [selectedStudent, setSelectedStudent] = useState("");
 
     const loadData = async () => {
         try {
@@ -44,7 +46,22 @@ const PaymentList = () => {
 
     useEffect(() => {
         loadData();
+        loadStudents();
     }, []);
+
+    const loadStudents = async () => {
+        try {
+            setLoadingStudents(true);
+            const response = await api.get("/usuarios");
+            const estudiantesData = response.data.filter(u => u.rol === "Estudiante");
+            setStudents(estudiantesData);
+        } catch (error) {
+            console.error("Error cargando estudiantes:", error);
+            setStudents([]);
+        } finally {
+            setLoadingStudents(false);
+        }
+    };
 
     const voucherById = useMemo(() => {
         const map = new Map();
@@ -88,17 +105,17 @@ const PaymentList = () => {
     };
 
     const downloadReportPdf = async (endpoint, filename) => {
-        if (!studentId.trim()) {
+        if (!selectedStudent) {
             Swal.fire({
                 icon: "warning",
-                title: "Falta el ID del estudiante",
-                text: "Ingresa el estudiante_id para descargar el reporte.",
+                title: "Selecciona un estudiante",
+                text: "Debes seleccionar un estudiante para descargar el reporte.",
             });
             return;
         }
 
         try {
-            const url = endpoint.replace(":id", studentId.trim());
+            const url = endpoint.replace(":id", selectedStudent);
 
             const res = await api.get(url, {
                 responseType: "blob",
@@ -152,13 +169,22 @@ const PaymentList = () => {
 
                     <div className="row g-2 align-items-end">
                         <div className="col-md-4">
-                            <label className="form-label">estudiante_id</label>
-                            <input
-                                className="form-control"
-                                placeholder="Ej: 69495e2a8963351d7d13..."
-                                value={studentId}
-                                onChange={(e) => setStudentId(e.target.value)}
-                            />
+                            <label className="form-label">Seleccionar Estudiante</label>
+                            <select
+                                className="form-select"
+                                value={selectedStudent}
+                                onChange={(e) => setSelectedStudent(e.target.value)}
+                                disabled={loadingStudents}
+                            >
+                                <option value="">
+                                    {loadingStudents ? "Cargando estudiantes..." : "Selecciona un estudiante"}
+                                </option>
+                                {students.map((student) => (
+                                    <option key={student._id || student.id} value={student._id || student.id}>
+                                        {student.nombre} ({student.email})
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="col-md-8 d-flex flex-wrap gap-2">
@@ -167,7 +193,7 @@ const PaymentList = () => {
                                 onClick={() =>
                                     downloadReportPdf(
                                         "/reportes/certificados/:id",
-                                        `certificado_${studentId || "estudiante"}.pdf`
+                                        `certificado_${students.find(s => (s._id || s.id) === selectedStudent)?.nombre || "estudiante"}.pdf`
                                     )
                                 }
                             >
@@ -180,25 +206,12 @@ const PaymentList = () => {
                                 onClick={() =>
                                     downloadReportPdf(
                                         "/reportes/record-academico/:id",
-                                        `record_${studentId || "estudiante"}.pdf`
+                                        `record_${students.find(s => (s._id || s.id) === selectedStudent)?.nombre || "estudiante"}.pdf`
                                     )
                                 }
                             >
                                 <i className="bi bi-journal-text me-1"></i>
                                 Récord académico
-                            </button>
-
-                            <button
-                                className="btn btn-outline-primary"
-                                onClick={() =>
-                                    downloadReportPdf(
-                                        "/reportes/horario/:id",
-                                        `horario_${studentId || "estudiante"}.pdf`
-                                    )
-                                }
-                            >
-                                <i className="bi bi-calendar-week me-1"></i>
-                                Horario
                             </button>
                         </div>
                     </div>
